@@ -3,9 +3,12 @@ package com.sam.todos.api
 import com.sam.todos.services.{TodoCreator, TodoFetcher}
 import com.twitter.finagle.http.Request
 import com.twitter.finatra.http.Controller
+import com.twitter.finatra.request.{FormParam, QueryParam}
 
 
-case class TodoRequest(name: String)
+case class TodoRequest(@FormParam name: String)
+
+case class Error(reason: String)
 
 class TodoController extends Controller {
 
@@ -13,16 +16,11 @@ class TodoController extends Controller {
     val result = TodoFetcher.fetch(request.params("id").toInt)
     result match {
       case Some(value) => value
-      case None => response.notFound("Not Found")
+      case None => response.notFound(Error("Not Found"))
     }
   }
 
-  post("/todos/") { request: Request =>
-    val name = request.params.get("name")
-    name match {
-      case Some(value) => TodoCreator.create(value)
-      case None => response.status(403).body("name is required")
-    }
-
+  post("/todos/") { request: TodoRequest =>
+    TodoCreator.create(request.name)
   }
 }
