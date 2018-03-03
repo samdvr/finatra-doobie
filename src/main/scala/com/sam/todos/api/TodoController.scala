@@ -13,7 +13,7 @@ class TodoController extends Controller {
     val result = TodoFetcher.fetch(request.params("id").toInt)
     result match {
       case Some(value) => value
-      case None => response.notFound.body("NotFound")
+      case None => response.status(404).body("NotFound")
     }
   }
 
