@@ -3,9 +3,9 @@ package com.sam.todos.api
 import com.sam.todos.services.{TodoCreator, TodoFetcher}
 import com.twitter.finagle.http.Request
 import com.twitter.finatra.http.Controller
-import com.twitter.finatra.request.{FormParam, QueryParam}
+import com.twitter.finatra.request.{FormParam, RouteParam}
 
-case class TodoGetRequest(@QueryParam id: String)
+case class TodoGetRequest(@RouteParam id: String)
 case class TodoRequest(@FormParam name: String)
 
 case class Error(reason: String)
