@@ -5,15 +5,15 @@ import com.twitter.finagle.http.Request
 import com.twitter.finatra.http.Controller
 import com.twitter.finatra.request.{FormParam, QueryParam}
 
-
+case class TodoGetRequest(@QueryParam id: String)
 case class TodoRequest(@FormParam name: String)
 
 case class Error(reason: String)
 
 class TodoController extends Controller {
 
-  get("/todos/:id") { request: Request =>
-    val result = TodoFetcher.fetch(request.params("id").toInt)
+  get("/todos/:id") { request: TodoGetRequest =>
+    val result = TodoFetcher.fetch(request.id.toInt)
     result match {
       case Some(value) => value
       case None => response.notFound(Error("Not Found"))
