@@ -1,14 +1,14 @@
 package com.sam.todos.api
 
 import com.sam.todos.services.{TodoCreator, TodoFetcher}
-import com.twitter.finagle.http.Request
 import com.twitter.finatra.http.Controller
 import com.twitter.finatra.request.{FormParam, RouteParam}
 
 case class TodoGetRequest(@RouteParam id: String)
 case class TodoRequest(@FormParam name: String)
 
-case class Error(reason: String)
+case class Error(error: String)
+
 
 class TodoController extends Controller {
 
@@ -21,6 +21,10 @@ class TodoController extends Controller {
   }
 
   post("/todos/") { request: TodoRequest =>
-    TodoCreator.create(request.name)
+    val result = TodoCreator.create(request.name)
+    result match {
+      case 1 => response.created.body("{}")
+      case _ => response.badGateway.body(Error("Something went wrong"))
+    }
   }
 }

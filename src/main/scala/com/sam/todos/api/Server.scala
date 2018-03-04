@@ -15,5 +15,6 @@ class TodoServer extends HttpServer {
       .filter[TraceIdMDCFilter[Request, Response]]
       .filter[CommonFilters]
       .add[TodoController]
+
   }
 }

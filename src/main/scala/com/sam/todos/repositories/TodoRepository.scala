@@ -18,4 +18,5 @@ object TodoRepository {
     sql"insert into todo (name, status) values (${name}, ${status})".update.run.transact(xa)
   }
 
+
 }
