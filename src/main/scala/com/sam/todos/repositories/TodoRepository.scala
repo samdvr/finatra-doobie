@@ -15,7 +15,11 @@ object TodoRepository {
 
   def create(name: String) = {
     val status = "pending"
-    sql"insert into todo (name, status) values (${name}, ${status})".update.run.transact(xa)
+    val result = for {
+      _ <- sql"insert into todo (name, status) values (${name}, ${status})".update.run
+      id <- sql"select lastval()".query[Long].unique
+    } yield id
+    result.transact(xa)
   }
 
 

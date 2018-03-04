@@ -7,6 +7,8 @@ import com.twitter.finatra.request.{FormParam, RouteParam}
 case class TodoGetRequest(@RouteParam id: String)
 case class TodoRequest(@FormParam name: String)
 
+case class TodoCreatedResponse(id: Long)
+
 case class Error(error: String)
 
 
@@ -21,10 +23,8 @@ class TodoController extends Controller {
   }
 
   post("/todos/") { request: TodoRequest =>
-    val result = TodoCreator.create(request.name)
-    result match {
-      case 1 => response.created.body("{}")
-      case _ => response.badGateway.body(Error("Something went wrong"))
-    }
+    val id = TodoCreator.create(request.name)
+    response.created.body(TodoCreatedResponse(id))
+
   }
 }
